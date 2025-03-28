@@ -5,6 +5,7 @@ class Student {
     private Laboratory lab;
     public Student(String name) {
         System.out.println("Student " + name + " registered at NCHU.");
+        this.name = name;
     }
     String getName() {
         return name;
@@ -16,7 +17,11 @@ class Student {
         this.lab = lab;
     }
     void getTeacherName() {
-        System.out.println(this.name + "'s advisor is " + );
+        if (this.lab == null){
+            return;
+        } else {
+            System.out.println(this.name + "'s advisor is " + this.lab.getTeacher().getTeacherName()+".");
+        }
     }
 }
 
@@ -25,38 +30,50 @@ class Professor {
     private String major;
     public Professor(String teacherName, String major) {
         System.out.println("Professor " + teacherName + "'s expertise includes " + major + " .");
+        this.teacherName = teacherName;
+        this.major = major;
     }
     public String getTeacherName() {
         return teacherName;
     }
-    String getMajor() {
-        return major;
-    }
-    // getMajor 我自己加的，題目沒有給。
 }
 
 class Laboratory{
     private String labName;
     private int numOfStudent;
     private Professor teacher;
+    private int currentStudentCount = 0;
     public Laboratory(String labName, int numOfStudent, Professor teacher) {
         System.out.println("Create " + labName + " with " + numOfStudent + " vacancies.");
+        this.labName = labName;
+        this.numOfStudent = numOfStudent;
+        this.teacher = teacher;
     }
     String getLabName() {
         return labName;
     }
     void checkRemainPlaces() {
-        System.out.println("hello:"+this.numOfStudent);
+        if((this.numOfStudent - this.currentStudentCount) == 0){
+            System.out.println(this.labName + " has no vacancies.");
+        } else {
+            System.out.println(this.labName + " still has "+ (this.numOfStudent - this.currentStudentCount) + " vacancies.");
+        }
     }
     Professor getTeacher() {
+        //return laboratory's teacher
         return teacher;
     }
     void addStudent(Student student) {
-        if (numOfStudent <= 0) {
-            System.out.println("numOfStudent: " + numOfStudent);
+        if(this.currentStudentCount >= this.numOfStudent) {
+            System.out.println(student.getName()+" noticed that "+ this.getLabName() +" had reached full capacity.");
+            return;
+        }
+        if (student.getLab() == null) {
+            student.setLab(this);
+            System.out.println(student.getName()+" joined "+ this.getLabName()+".");
+            this.currentStudentCount++;
         } else {
-           this.numOfStudent = this.numOfStudent - 1;
-           System.out.println("numOfStudent: " + numOfStudent);
+            System.out.println(student.getName()+" has already joined "+ student.getLab().getLabName()+".");
         }
     }
 }
